@@ -1,0 +1,235 @@
+data:
+  start_date: '2024-01-01'
+  end_date: '2025-12-31'
+  validation:
+    coverage_threshold: 0.9
+    missing_threshold: 0.05
+trend:
+  weights:
+    level4:
+      momentum: 0.33
+      deviation: 0.1
+      vol_adjust: 0.11
+      relative: 0.2
+      quality: 0.26
+    level3:
+      momentum: 0.23
+      deviation: 0.12
+      vol_adjust: 0.17
+      relative: 0.28
+      quality: 0.2
+    level2:
+      momentum: 0.1
+      deviation: 0.08
+      vol_adjust: 0.3
+      relative: 0.36
+      quality: 0.16
+    level1:
+      momentum: 0.15
+      deviation: 0.15
+      vol_adjust: 0.15
+      relative: 0.15
+      quality: 0.4
+  ir_threshold: 0.7
+left:
+  score_weights:
+    slowdown: 0.22
+    bias: 0.2
+    shadow: 0.24
+    flow: 0.22
+    vol_shadow: 0.12
+  selection:
+    return_threshold: -0.06
+    score_threshold: 88
+    max_selections: 10
+  ic_threshold: 0.08
+selection:
+  trend:
+    level2:
+      count: 12
+    level3:
+      per_parent: 2
+      max_total: 16
+    level4:
+      per_parent: 1
+      max_total: 20
+    skip_levels: 0
+risk_control:
+  position:
+    max_single_sector: 0.1
+    max_left_single: 0.05
+    max_trend_total: 0.75
+    max_left_total: 0.25
+  stop_loss:
+    atr_multiplier: 3.2
+    fixed_stop: 0.1
+    holding_period: 60
+    score_exit: 0
+  abnormal:
+    tr_multiplier: 2.5
+backtest:
+  initial_capital: 1000000
+  start_date: '2024-01-01'
+  end_date: '2025-12-31'
+  rebalance:
+    frequency: monthly
+    execution_delay: 1
+    tolerance_band: 0.03
+    residual_policy: cross_track_first
+    min_order_weight: 0.005
+  transaction_cost:
+    buy: 0.001
+    sell: 0.001
+    total: 0.002
+  allocation:
+    trend: 0.75
+    left: 0.25
+supplement:
+  candidate_pool:
+    score_threshold: 82
+    max_selections: 8
+  weight_allocation:
+    method: score_weighted
+regime:
+  enabled: true
+  segmentation: quarter
+  update_frequency: monthly
+  lookback_days: 63
+  min_history_days: 40
+  min_regime_days: 20
+  thresholds:
+    bull_return: 0.05
+    bear_return: -0.05
+    high_vol_quantile: 0.7
+    breadth_bull: 0.55
+    breadth_bear: 0.45
+  active_flags_defaults:
+    left_track_active: true
+    score_exit_active: true
+    aggressive_trend_expand_active: false
+    strict_left_filter_active: false
+    cross_track_first_active: true
+  flag_overrides:
+    strict_left_filter_active:
+      score_threshold_delta: 5
+      return_threshold_delta: 0.02
+      max_selections_delta: -2
+    aggressive_trend_expand_active:
+      level2_count_delta: 2
+      level4_max_total_delta: 4
+      trend_allocation_delta: 0.08
+  states:
+    bull:
+      enabled: true
+      active_flags:
+        left_track_active: true
+        score_exit_active: false
+        aggressive_trend_expand_active: true
+        strict_left_filter_active: false
+        cross_track_first_active: true
+      overrides:
+        backtest:
+          allocation:
+            trend: 0.78
+            left: 0.22
+          rebalance:
+            min_order_weight: 0.004
+        risk_control:
+          position:
+            max_trend_total: 0.78
+            max_left_total: 0.22
+            max_left_single: 0.05
+          stop_loss:
+            atr_multiplier: 3.4
+            score_exit: 0
+        selection:
+          trend:
+            level2:
+              count: 14
+            level4:
+              max_total: 24
+        left:
+          selection:
+            score_threshold: 90
+            return_threshold: -0.05
+            max_selections: 8
+        supplement:
+          candidate_pool:
+            score_threshold: 80
+            max_selections: 6
+    range:
+      enabled: true
+      active_flags:
+        left_track_active: true
+        score_exit_active: false
+        aggressive_trend_expand_active: false
+        strict_left_filter_active: false
+        cross_track_first_active: true
+      overrides:
+        backtest:
+          allocation:
+            trend: 0.72
+            left: 0.28
+          rebalance:
+            min_order_weight: 0.005
+        risk_control:
+          position:
+            max_trend_total: 0.72
+            max_left_total: 0.28
+            max_left_single: 0.05
+          stop_loss:
+            atr_multiplier: 3.2
+            score_exit: 0
+        selection:
+          trend:
+            level2:
+              count: 12
+            level4:
+              max_total: 20
+        left:
+          selection:
+            score_threshold: 88
+            return_threshold: -0.06
+            max_selections: 10
+        supplement:
+          candidate_pool:
+            score_threshold: 78
+            max_selections: 8
+    bear_highvol:
+      enabled: true
+      active_flags:
+        left_track_active: true
+        score_exit_active: true
+        aggressive_trend_expand_active: false
+        strict_left_filter_active: true
+        cross_track_first_active: true
+      overrides:
+        backtest:
+          allocation:
+            trend: 0.65
+            left: 0.35
+          rebalance:
+            min_order_weight: 0.006
+        risk_control:
+          position:
+            max_trend_total: 0.65
+            max_left_total: 0.35
+            max_left_single: 0.045
+          stop_loss:
+            atr_multiplier: 2.8
+            score_exit: 35
+        selection:
+          trend:
+            level2:
+              count: 9
+            level4:
+              max_total: 14
+        left:
+          selection:
+            score_threshold: 92
+            return_threshold: -0.05
+            max_selections: 7
+        supplement:
+          candidate_pool:
+            score_threshold: 84
+            max_selections: 5
