@@ -1,0 +1,104 @@
+# Production Environment Configuration
+# Following《dual-track-tech-spec》v1.0 Section 8.1 and《dual-track-api-design》v1.2
+
+# Database Configuration
+# NOTE: Only SELECT operations allowed per DB-02 constraint
+database:
+  host: "prod-db.cluster.example.com"
+  port: 5432
+  database: "dual_track_prod"
+  username: "prod_reader_user"
+  password_env_var: "PROD_DB_PASSWORD"
+  connection_pool_size: 10
+  readonly_user: true
+  query_timeout: 30
+
+# API Endpoints
+api_endpoints:
+  market_data_url: "https://api.prod-market-data.com/v1"
+  risk_management_url: "https://api.risk-control.com/v1"
+  notification_service_url: "https://api.notifications.com/v1"
+
+# Risk Limits
+risk_limits:
+  max_position_size: 1000000  # 1M USD max position
+  daily_loss_limit: 50000     # 50K USD daily loss limit
+  volatility_threshold: 0.02  # 2% daily volatility threshold
+  correlation_limit: 0.7      # Max 0.7 correlation between tracks
+  max_drawdown: 0.15          # 15% max drawdown
+
+# Production Mode Settings
+production_mode: true
+enable_real_trading: true
+simulation_mode: false
+
+# Data Constraints (Anti-Lookahead Protection per DB-03)
+# All data access must respect this date boundary
+data_as_of_date: "2026-03-03T00:00:00Z"
+max_lookback_period: 252      # 1 year of trading days
+data_refresh_interval: 3600   # 1 hour in seconds
+
+# Dual Track Configuration (STRAT-01 Isolation)
+tracks:
+  trend_following:
+    enabled: true
+    screener_class: "TrendScreener"
+    strategy_params:
+      ma_short_window: 20
+      ma_long_window: 50
+      rsi_period: 14
+      bb_period: 20
+    risk_multiplier: 1.0
+  
+  mean_reversion:
+    enabled: true
+    screener_class: "LeftScreener"  # Corrected naming per STRAT-01
+    strategy_params:
+      zscore_threshold: 2.0
+      holding_period: 5
+      rebalance_frequency: 1
+    risk_multiplier: 1.0
+
+# Logging and Monitoring
+logging:
+  level: "INFO"
+  file_path: "/workspace/logs/prod.log"
+  rotation_size: "100MB"
+  backup_count: 10
+
+monitoring:
+  metrics_enabled: true
+  heartbeat_interval: 60
+  alert_recipients:
+    - "trading-ops@example.com"
+    - "dev-team@example.com"
+
+# File System (Atomic Write per RUN-02)
+file_system:
+  state_directory: "/workspace/data/prod_states"
+  backup_directory: "/workspace/backups"
+  temp_directory: "/tmp"
+  atomic_write_enabled: true
+  checksum_validation: true
+
+# Execution Parameters
+execution:
+  max_concurrent_signals: 50
+  signal_processing_delay: 0.1  # 100ms delay between signals
+  order_timeout: 300           # 5 minutes timeout
+  retry_attempts: 3
+  backoff_factor: 2
+
+# Compliance Settings
+compliance:
+  audit_logging: true
+  trade_verification: true
+  regulatory_reporting: true
+  data_retention_days: 365
+
+# Performance Tuning
+performance:
+  cache_size: 10000
+  batch_size: 100
+  parallel_workers: 4
+  memory_limit_mb: 1024
