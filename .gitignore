@@ -5,33 +5,37 @@ __pycache__/
 *.pyo
 *.pyd
 .Python
+env/
 venv/
 .venv/
+.ENV
 .env
-.env.local
 .env.*
+.venv.bak/
+pip-log.txt
+pip-delete-this-directory.txt
 
 # Testing
-.pytest_cache/
 .coverage
 coverage/
+htmlcov/
+.pytest_cache/
+.nyc_output
+coverage-final.json
 
-# Logs
-*.log
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Editor
+# IDE
 .vscode/
 .idea/
 *.swp
 *.swo
 *.tmp
 
-# Build/dist
-dist/
-build/
-*.egg-info/
+# Logs
+*.log
+
+# Environment specific
+.env.local
+.env.development
+.env.test
+.env.production
 ```
