@@ -1,0 +1,10 @@
+{
+  "positions": {
+    "stock_x": 0.4,
+    "stock_y": 0.6
+  },
+  "strategy": "mean_reversion",
+  "risk_level": "medium",
+  "last_updated": "2026-03-03T02:31:46.996414",
+  "timestamp": 1772505106.996414
+}
