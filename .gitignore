@@ -4,38 +4,24 @@ __pycache__/
 *.pyc
 *.pyo
 *.pyd
-.Python
-env/
-venv/
+
+# Dependencies
 .venv/
-.ENV
+venv/
+env/
 .env
+.env.local
 .env.*
-.venv.bak/
-pip-log.txt
-pip-delete-this-directory.txt
 
-# Testing
-.coverage
-coverage/
-htmlcov/
-.pytest_cache/
-.nyc_output
-coverage-final.json
-
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
+# Logs and temp files
+*.log
 *.tmp
 
-# Logs
-*.log
+# Editors
+.vscode/
+.idea/
 
-# Environment specific
-.env.local
-.env.development
-.env.test
-.env.production
+# Build artifacts
+build/
+dist/
 ```

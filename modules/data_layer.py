@@ -155,9 +155,21 @@ class DataLoader:
     负责从数据库加载市场数据和行业数据
     """
     
-    def __init__(self, config_path: str = "../config.yaml"):
+    def __init__(self, config_path: str = "./config.yaml"):
         """初始化数据加载器"""
-        with open(config_path, 'r', encoding='utf-8') as f:
+        import os
+        # 获取当前工作目录 - modules子目录
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        # 从modules目录向上两级到达workspace根目录
+        base_dir = os.path.dirname(os.path.dirname(current_dir))
+        config_abs_path = os.path.join(base_dir, config_path.lstrip('./'))
+        
+        # 确保路径存在
+        if not os.path.exists(config_abs_path):
+            # 如果路径不存在，尝试在当前工作目录查找
+            config_abs_path = os.path.join(os.getcwd(), config_path.lstrip('./'))
+        
+        with open(config_abs_path, 'r', encoding='utf-8') as f:
             self.config = yaml.safe_load(f)
         
         self.db_config = self.config['database']
