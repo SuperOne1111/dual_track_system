@@ -1,0 +1,42 @@
+# 配置文件 - 四级行业双轨筛选系统
+# 依据《技术规格说明书》v1.0 第 8 节
+
+system:
+  mode: "backtest"  # 运行模式: backtest | production
+  log_level: "INFO"
+  
+database:
+  host: "localhost"
+  port: 5432
+  database: "sector_screening_db"
+  username: "readonly_user"
+  password: "${DB_PASSWORD}"
+  pool_size: 10
+  
+screening:
+  cool_down:
+    days: 10  # 全局冷却期天数，依据 CONS-02 标准
+  
+portfolio:
+  target_weights:
+    trend_track: 0.85  # 趋势轨道权重，硬编码固化
+    left_track: 0.15   # 左侧轨道权重，硬编码固化
+  rebalance_threshold: 0.05  # 调仓阈值 5%
+  
+factors:
+  volatility_control:
+    lookback_days: 20
+    target_volatility: 0.15  # 年化 15%
+  
+  ic_monitoring:
+    window_days: 90
+    min_win_rate: 0.30
+    auto_degrade_factor: 0.5
+    
+data:
+  pit_validation: true  # 启用防未来函数验证
+  min_window_days: 60   # 最小数据窗口，应对 RISK-02
+  
+output:
+  atomic_write_enabled: true  # 启用原子写入，应对 RISK-03
+  backup_enabled: false
